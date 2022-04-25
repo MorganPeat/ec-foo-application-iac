@@ -2,9 +2,10 @@ name: "Terraform"
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -18,19 +19,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Get Secrets
-        id: secrets
+      - name: Get Reader Secret
+        id: reader-tfe-token
         uses: hashicorp/vault-action@v2.4.0
         with:
           url: http://34.76.97.0:8200
           method: jwt
-          role: foo-dev-reader
+          role: ${{ secrets.VAULT_ROLE }}-reader
           jwtGithubAudience: https://github.com/morganpeat
           secrets: |
-              kv/bootstrap vault_token | MY_SECRET
+              terraform/creds/${{ secrets.VAULT_ROLE }}-resources-reader token | TFE_TOKEN
 
-      - name: Test
-        run: echo "blash ${{ steps.secrets.outputs.MY_SECRET }}"
+      - name: Publish token
+        run: echo "${{ steps.reader-tfe-token.outputs.TFE_TOKEN }}" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -88,6 +89,22 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
+
+      - name: Get Writer Secret
+        id: writer-tfe-token
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: http://34.76.97.0:8200
+          method: jwt
+          role: ${{ secrets.VAULT_ROLE }}-reader
+          jwtGithubAudience: https://github.com/morganpeat
+          secrets: |
+              terraform/creds/${{ secrets.VAULT_ROLE }}-resources-reader token | TFE_TOKEN
+
+      - name: Publish token
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: echo "${{ steps.reader-tfe-token.outputs.TFE_TOKEN }}" >> $GITHUB_ENV
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
