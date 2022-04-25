@@ -12,42 +12,48 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: "Terraform"
+
+  foo-dev:
+    name: "Foo DEV"
     runs-on: ubuntu-latest
+    environment: dev
+    working-directory: ./environments/dev
     steps:
 
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Plan Dev
-        environment: dev
-        id: plan-dev
-        working-directory: ./environments/dev
+      - name: Plan
+        id: plan
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: dev
 
-      - name: Apply Dev
-        environment: dev
-        id: apply-dev
-        working-directory: ./environments/dev
+      - name: Apply
+        id: apply
         uses: ./.github/actions/terraform-apply
         with:
           deployment-environment: dev
 
-      - name: Plan Int
-        environment: int
-        id: plan-int
-        working-directory: ./environments/int
+  foo-int:
+    name: "Foo INT"
+    runs-on: ubuntu-latest
+    environment: int
+    working-directory: ./environments/int
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Plan
+        id: plan
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: int
 
-      - name: Apply Int
-        environment: int
-        id: apply-int
-        working-directory: ./environments/int
+      - name: Apply
+        id: apply
         uses: ./.github/actions/terraform-apply
         with:
           deployment-environment: int
+
