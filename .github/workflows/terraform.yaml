@@ -28,6 +28,7 @@ jobs:
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: dev
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Apply
         id: apply
@@ -51,6 +52,7 @@ jobs:
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: int
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Apply
         id: apply
