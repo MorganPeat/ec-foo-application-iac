@@ -1,0 +1,37 @@
+name: 'Terraform Apply'
+description: 'Run a terraform apply against some IaC'
+inputs:
+  deployment-environment:
+    description: 'Environment being deployed to'
+    required: true
+    default: 'dev'
+
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Get Writer Secret
+      id: writer-tfe-token
+      uses: hashicorp/vault-action@v2.4.0
+      with:
+        url: http://34.76.97.0:8200
+        method: jwt
+        role: foo-${{ inputs.deployment-environment }}-reader
+        jwtGithubAudience: https://github.com/morganpeat
+        secrets: |
+            terraform/creds/foo-${{ inputs.deployment-environment }}-resources-reader token | TFE_TOKEN
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.1
+        cli_config_credentials_token: ${{ steps.writer-tfe-token.outputs.TFE_TOKEN }}
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+    
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve
+      
