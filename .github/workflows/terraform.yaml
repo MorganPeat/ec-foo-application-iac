@@ -40,7 +40,6 @@ jobs:
     name: "Foo INT"
     runs-on: ubuntu-latest
     environment: int
-    working-directory: ./environments/int
     steps:
 
       - name: Checkout
