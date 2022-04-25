@@ -7,9 +7,7 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
+permissions: write-all
 
 jobs:
 
@@ -24,7 +22,6 @@ jobs:
 
       - name: Plan
         id: plan
-        #working-directory: ./environments/dev
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: dev
@@ -32,7 +29,6 @@ jobs:
 
       - name: Apply
         id: apply
-        #working-directory: ./environments/dev
         uses: ./.github/actions/terraform-apply
         with:
           deployment-environment: dev
@@ -48,7 +44,6 @@ jobs:
 
       - name: Plan
         id: plan
-        #working-directory: ./environments/int
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: int
@@ -56,7 +51,6 @@ jobs:
 
       - name: Apply
         id: apply
-        #working-directory: ./environments/int
         uses: ./.github/actions/terraform-apply
         with:
           deployment-environment: int

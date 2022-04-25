@@ -9,9 +9,7 @@ inputs:
     description: 'GitHub token for writing back to repo'
     required: true
 
-permissions:
-  id-token: write
-  contents: read
+permissions: write-all
 
 runs:
   using: 'composite'
