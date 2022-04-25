@@ -16,10 +16,10 @@ runs:
       with:
         url: http://34.76.97.0:8200
         method: jwt
-        role: foo-${{ inputs.deployment-environment }}-reader
+        role: foo-${{ inputs.deployment-environment }}-writer
         jwtGithubAudience: https://github.com/morganpeat
         secrets: |
-            terraform/creds/foo-${{ inputs.deployment-environment }}-resources-reader token | TFE_TOKEN
+            terraform/creds/foo-${{ inputs.deployment-environment }}-resources-writer token | TFE_TOKEN
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
