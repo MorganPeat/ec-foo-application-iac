@@ -16,6 +16,8 @@ runs:
   steps:
 
     # Authenticate with Vault using GitHub JWT
+    # TFC role is bound to repo and environment
+    # TODO: bind to branch too - only allow writer token on main
     - name: Get Reader Secret
       id: reader-tfe-token
       uses: hashicorp/vault-action@v2.4.0
