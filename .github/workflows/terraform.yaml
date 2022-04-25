@@ -24,14 +24,14 @@ jobs:
 
       - name: Plan
         id: plan
-        working-directory: ./environments/dev
+        #working-directory: ./environments/dev
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: dev
 
       - name: Apply
         id: apply
-        working-directory: ./environments/dev
+        #working-directory: ./environments/dev
         uses: ./.github/actions/terraform-apply
         with:
           deployment-environment: dev
@@ -48,14 +48,14 @@ jobs:
 
       - name: Plan
         id: plan
-        working-directory: ./environments/int
+        #working-directory: ./environments/int
         uses: ./.github/actions/terraform-plan
         with:
           deployment-environment: int
 
       - name: Apply
         id: apply
-        working-directory: ./environments/int
+        #working-directory: ./environments/int
         uses: ./.github/actions/terraform-apply
         with:
           deployment-environment: int
