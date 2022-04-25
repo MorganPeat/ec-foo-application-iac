@@ -9,10 +9,13 @@ inputs:
     description: 'GitHub token for writing back to repo'
     required: true
 
+permissions: write-all
+
 runs:
   using: 'composite'
   steps:
 
+    # Authenticate with Vault using GitHub JWT
     - name: Get Reader Secret
       id: reader-tfe-token
       uses: hashicorp/vault-action@v2.4.0
