@@ -14,7 +14,7 @@ runs:
       id: writer-tfe-token
       uses: hashicorp/vault-action@v2.4.0
       with:
-        url: http://34.76.97.0:8200
+        url: http://34.77.227.192:8200
         method: jwt
         role: foo-${{ inputs.deployment-environment }}-writer
         jwtGithubAudience: https://github.com/morganpeat
